@@ -1,6 +1,6 @@
 import { startRepl } from "./repl.js";
 
-function main() {
+function main(): void {
   startRepl();
 }
 

@@ -1,5 +1,21 @@
 import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
+import { commandExit } from "./command_exit.js";
+import { commandHelp } from "./command_help.js";
+export function getCommands() {
+    return {
+        exit: {
+            name: "exit",
+            description: "Exit the Pokedex REPL",
+            callback: commandExit,
+        },
+        help: {
+            name: "help",
+            description: "Displays a help message",
+            callback: commandHelp,
+        },
+    };
+}
 export function cleanInput(input) {
     return input.toLowerCase().trim().split(" ").filter((word) => word !== "");
 }
@@ -11,13 +27,6 @@ export function startRepl() {
     });
     readLine.prompt();
     readLine.on("line", async (input) => {
-        const words = cleanInput(input);
-        if (words.length === 0) {
-            readLine.prompt();
-            return;
-        }
-        const commandName = words[0];
-        console.log(`Your command was: ${commandName}`);
-        readLine.prompt();
+        console.log(getCommands()[input].callback(getCommands()) ?? `Unknown command: ${input}`);
     });
 }
